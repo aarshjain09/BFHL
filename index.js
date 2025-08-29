@@ -31,16 +31,16 @@ app.post("/bfhl", (req, res) => {
     let sum = 0;
 
     arr.forEach((item) => {
-      if (typeof item === "number") {
-        if (item % 2 === 0) evens.push(item);
-        else odds.push(item);
-        sum += item;
-      } else if (typeof item === "string") {
-        if (/^[a-zA-Z]$/.test(item)) {
-          alphabets.push(item.toUpperCase());
-        } else {
-          specials.push(item);
-        }
+      // check if it's a number (either number type or numeric string)
+      if (!isNaN(item)) {
+        const num = parseInt(item);
+        if (num % 2 === 0) evens.push(item.toString());
+        else odds.push(item.toString());
+        sum += num;
+      } else if (typeof item === "string" && /^[a-zA-Z]$/.test(item)) {
+        alphabets.push(item.toUpperCase());
+      } else {
+        specials.push(item);
       }
     });
 
@@ -54,11 +54,11 @@ app.post("/bfhl", (req, res) => {
       user_id: USER_ID,
       email: EMAIL,
       college_roll_number: ROLL,
-      even_numbers: evens,
       odd_numbers: odds,
+      even_numbers: evens,
       alphabets: alphabets,
       special_characters: specials,
-      sum_of_numbers: sum,
+      sum_of_numbers: sum.toString(),
       reverse_alphabets_caps: alternatingCaps(reverseAlpha),
     });
   } catch (err) {
